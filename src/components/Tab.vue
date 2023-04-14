@@ -24,6 +24,7 @@
 <style scoped>
   .Tab {
     border: none;
+    cursor: pointer;
     padding: 5px 10px;
     font-weight: bold;
     border-radius: 4px;

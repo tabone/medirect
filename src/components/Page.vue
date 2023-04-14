@@ -1,4 +1,6 @@
 <script>
+  import PageLoader from "./PageLoader.vue"
+
   export default {
     props: {
       title: {
@@ -8,21 +10,34 @@
 
       subtitle: {
         type: String
+      },
+
+      loading: {
+        type: Boolean,
+        default: false
       }
+    },
+
+    components: {
+      PageLoader
     }
   }
   </script>
 
 <template>
   <div class="Page">
-    <header class="PageHeader">
-      <h1 class="PageHeaderTitle">{{title}}</h1>
-      <h2 class="PageHeaderSubtitle">{{subtitle}}</h2>
-    </header>
+    <PageLoader v-if="loading" />
 
-    <main>
-      <slot></slot>
-    </main>
+    <template v-else>
+      <header class="PageHeader">
+        <h1 class="PageHeaderTitle">{{title}}</h1>
+        <h2 class="PageHeaderSubtitle">{{subtitle}}</h2>
+      </header>
+
+      <main>
+        <slot></slot>
+      </main>
+    </template>
   </div>
 </template>
 

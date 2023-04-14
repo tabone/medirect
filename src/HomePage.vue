@@ -1,4 +1,5 @@
 <script>
+  import axios from "./axios"
   import Page from "./components/Page.vue"
   import Select from "./components/Select.vue"
   import Exchanges from "./components/Exchanges.vue"
@@ -7,7 +8,8 @@
     data: () => {
       return {
         codeTo: null,
-        codeFrom: null
+        codeFrom: null,
+        loading: false
       }
     },
 
@@ -15,6 +17,20 @@
       Page,
       Select,
       Exchanges
+    },
+
+    mounted: function mounted () {
+      this.loading = true
+
+      axios.get('/live_currencies_list').then((resp) => {
+        this.$root.onCurrenciesChange(
+          Object.keys(resp.data.available_currencies)
+        )
+      }).catch((err) => {
+        console.error(err)
+      }).then(() => {
+        this.loading = false
+      })
     },
 
     computed: {
@@ -27,6 +43,7 @@
 
 <template>
   <Page
+    :loading="loading"
     title="Forex Exchange"
     subtitle="Checkout the current price for a currency pair" >
     <div class="HomePage">
@@ -60,17 +77,17 @@
   }
 
   .HomePageConfiguration {
-    flex: 1;
+    flex: 1 0 200px;
     display: flex;
     flex-direction: column;
     gap: 24px;
   }
 
   .HomePageChart {
-    flex: 2;
+    flex: 0 1 700px;
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: 1000px) {
     .HomePage {
       flex-direction: column;
     }
