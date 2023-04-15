@@ -7,6 +7,18 @@
 
   import axios from "../axios"
 
+  function formatDate (date) {
+    return [
+      date.getUTCFullYear(),
+      String(date.getUTCMonth() + 1).padStart(2, '0'),
+      String(date.getUTCDate()).padStart(2, '0'),
+      [
+        String(date.getUTCHours()).padStart(2, '0'),
+        String(date.getUTCMinutes()).padStart(2, '0')
+      ].join(':')
+    ].join('-')
+}
+
   export default {
     props: {
       codeFrom: {
@@ -32,7 +44,7 @@
       return {
         data: [],
         loading: false,
-        frequency: '1D'
+        range: '1H'
       }
     },
 
@@ -41,7 +53,7 @@
     },
 
     watch: {
-      frequency: function frequency () {
+      range: function range () {
         this.refreshData()
       },
 
@@ -55,7 +67,7 @@
         return `${this.codeFrom}${this.codeTo}`
       },
 
-      frequencies: function frequencies () {
+      ranges: function ranges () {
         return ['15M', '1H', '1D', '1W', '1M']
       },
 
@@ -106,34 +118,120 @@
             y: { display: false }
           }
         }
+      },
+
+      startingPrice: function startingPrice () {
+        return this.data[0]?.data
+      },
+
+      difference: function difference () {
+        const startingPrice = this.startingPrice
+        const lastEntry = this.data[this.data.length - 1]?.data
+
+        return startingPrice == null || lastEntry == null
+          ? 0
+          : startingPrice - lastEntry
+      },
+
+      differenceLabel: function differenceLabel () {
+        return new Intl.NumberFormat(
+          'en-IN',
+          {
+            style: 'currency',
+            currency: this.codeTo,
+            maximumSignificantDigits: 6
+          }
+        ).format(this.difference)
+      },
+
+      differencePercentage: function differencePercentage () {
+        const percentage = this.difference == 0 ? 0 : (
+          this.startingPrice/this.difference * 100
+        ).toFixed(6)
+
+        return `${percentage}%`
       }
     },
 
     methods: {
-      get1DData() {
+      get1MData() {
         const toDate = new window.Date()
-        toDate.setDate(toDate.getDate() - 1)
 
         const fromDate = new window.Date()
-        fromDate.setFullYear(fromDate.getFullYear() - 1)
+        fromDate.setMonth(fromDate.getMonth() - 1)
 
         const params = {
           currency: this.currencyPair,
 
+          period: 1,
           format: 'records',
           interval: 'daily',
 
-          start_date: [
-            fromDate.getFullYear(),
-            String(fromDate.getMonth() + 1).padStart(2, '0'),
-            String(fromDate.getDate()).padStart(2, '0')
-          ].join('-'),
+          end_date: formatDate(toDate),
+          start_date: formatDate(fromDate)
+        }
 
-          end_date: [
-            toDate.getFullYear(),
-            String(toDate.getMonth() + 1).padStart(2, '0'),
-            String(toDate.getDate()).padStart(2, '0')
-          ].join('-')
+        return axios.get('/timeseries', { params }).then((resp) => {
+          this.data = resp.data.quotes.reduce(
+            (data, quote) => {
+              data.push(
+                {
+                  label: quote.date,
+                  data: quote.close
+                }
+              )
+              return data
+            }, []
+          )
+        })
+      },
+      get1WData() {
+        const toDate = new window.Date()
+
+        const fromDate = new window.Date()
+        fromDate.setDate(fromDate.getDate() - 7)
+
+        const params = {
+          currency: this.currencyPair,
+
+          period: 1,
+          format: 'records',
+          interval: 'hourly',
+
+          end_date: formatDate(toDate),
+          start_date: formatDate(fromDate)
+        }
+
+        return axios.get('/timeseries', { params }).then((resp) => {
+          this.data = resp.data.quotes.reduce(
+            (data, quote) => {
+              data.push(
+                {
+                  label: quote.date,
+                  data: quote.close
+                }
+              )
+              return data
+            }, []
+          )
+        })
+      },
+
+      get1DData() {
+        const toDate = new window.Date()
+
+        const fromDate = new window.Date()
+        fromDate.setDate(fromDate.getDate() - 1)
+
+        const params = {
+          currency: this.currencyPair,
+
+          period: 1,
+          format: 'records',
+          interval: 'hourly',
+
+          end_date: formatDate(toDate),
+          start_date: formatDate(fromDate)
         }
 
         return axios.get('/timeseries', { params }).then((resp) => {
@@ -153,28 +251,19 @@
 
       get1HData() {
         const toDate = new window.Date()
-        toDate.setDate(toDate.getDate() - 1)
 
         const fromDate = new window.Date()
-        fromDate.setMonth(fromDate.getMonth() - 1)
+        fromDate.setHours(fromDate.getHours() - 1)
 
         const params = {
           currency: this.currencyPair,
 
+          period: 1,
           format: 'records',
-          interval: 'hourly',
+          interval: 'minute',
 
-          start_date: [
-            fromDate.getFullYear(),
-            String(fromDate.getMonth() + 1).padStart(2, '0'),
-            String(fromDate.getDate()).padStart(2, '0')
-          ].join('-'),
-
-          end_date: [
-            toDate.getFullYear(),
-            String(toDate.getMonth() + 1).padStart(2, '0'),
-            String(toDate.getDate()).padStart(2, '0')
-          ].join('-')
+          end_date: formatDate(toDate),
+          start_date: formatDate(fromDate)
         }
 
         return axios.get('/timeseries', { params }).then((resp) => {
@@ -194,30 +283,19 @@
 
       get15MData () {
         const toDate = new window.Date()
-        toDate.setDate(toDate.getDate() - 1)
 
         const fromDate = new window.Date()
-        fromDate.setDate(fromDate.getDate() - 3)
+        fromDate.setMinutes(fromDate.getMinutes() - 15)
 
         const params = {
-          period: 15,
-
-          currency: this.currencyPair,
+          period: 1,
 
           format: 'records',
           interval: 'minute',
+          currency: this.currencyPair,
 
-          start_date: [
-            fromDate.getFullYear(),
-            String(fromDate.getMonth() + 1).padStart(2, '0'),
-            String(fromDate.getDate()).padStart(2, '0')
-          ].join('-'),
-
-          end_date: [
-            toDate.getFullYear(),
-            String(toDate.getMonth() + 1).padStart(2, '0'),
-            String(toDate.getDate()).padStart(2, '0')
-          ].join('-')
+          end_date: formatDate(toDate),
+          start_date: formatDate(fromDate)
         }
 
         return axios.get('/timeseries', { params }).then((resp) => {
@@ -239,20 +317,24 @@
         this.loading = true
 
         ;(
-          this.frequency === '15M'
+          this.range === '15M'
             ? this.get15MData()
-            : this.frequency === '1H'
+            : this.range === '1H'
             ? this.get1HData()
-            : this.frequency === '1D'
+            : this.range === '1D'
             ? this.get1DData()
+            : this.range === '1W'
+            ? this.get1WData()
+            : this.range === '1M'
+            ? this.get1MData()
             : Promise.resolve()
         ).catch(err => {
           console.error(err)
         }).then(() => this.loading = false)
       },
 
-      onFrequencyChange: function (frequency) {
-        this.frequency = frequency
+      onRangeChange: function (range) {
+        this.range = range
       }
     }
   }
@@ -278,8 +360,8 @@
           </h3>
 
           <div class="ExchangesHeaderSummaryOverview">
-            <span class="ExchangesHeaderSummaryDifference">$1.000830</span>
-            <span class="ExchangesHeaderSummaryPercentage">0.000060 (0.005995%)</span>
+            <span class="ExchangesHeaderSummaryDifference">{{differenceLabel}}</span>
+            <span class="ExchangesHeaderSummaryPercentage">{{startingPrice}} ({{ differencePercentage }})</span>
           </div>
         </div>
       </header>
@@ -288,14 +370,14 @@
         <LineChart :data="chartData" :options="chartOptions" />
       </div>
 
-      <div class="ExchangesFrequencies">
+      <div class="ExchangesRanges">
 
         <Tab
-          :key="name"
-          v-for="name in frequencies"
-          :selected="frequency === name"
-          @click.native="onFrequencyChange(name)">
-          {{ name }}
+          :key="label"
+          v-for="label in ranges"
+          :selected="range === label"
+          @click.native="onRangeChange(label)">
+          {{ label }}
         </Tab>
       </div>
     </template>
@@ -374,7 +456,7 @@
     position:relative
   }
 
-  .ExchangesFrequencies {
+  .ExchangesRanges {
     gap: 8px;
     display: flex;
     justify-content: center;
