@@ -26,12 +26,12 @@
 
 <template>
   <div class="Page">
-    <PageLoader v-if="loading" />
+    <PageLoader v-if="loading" message="We'll be right with you!" />
 
     <template v-else>
       <header class="PageHeader">
         <h1 class="PageHeaderTitle">{{title}}</h1>
-        <h2 class="PageHeaderSubtitle">{{subtitle}}</h2>
+        <h2 v-if="subtitle" class="PageHeaderSubtitle">{{subtitle}}</h2>
       </header>
 
       <main>
