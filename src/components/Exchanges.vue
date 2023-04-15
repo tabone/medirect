@@ -374,7 +374,7 @@
         <div class="ExchangesHeaderSummary">
           <h3
             aria-label="Currency Pair"
-            class="ExchangesHeaderSummaryCurrencies">EUR/USD</h3>
+            class="ExchangesHeaderSummaryCurrencies">{{ codeFrom }}/{{ codeTo }}</h3>
 
           <div class="ExchangesHeaderSummaryOverview">
             <span class="ExchangesHeaderSummaryDifference" aria-label="Current Price">{{currentPriceLabel}}</span>
