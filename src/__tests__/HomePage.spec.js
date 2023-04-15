@@ -13,6 +13,12 @@ import axios from '../axios'
 
 import HomePage from '../HomePage.vue'
 
+vi.mock('chart.js/auto', () => {
+  return {
+    default: function () {}
+  }
+})
+
 describe('<HomePage /> Unit Tests', () => {
   let info = null
   let mockedClients = null
@@ -112,6 +118,10 @@ describe('<HomePage /> Unit Tests', () => {
         await waitForElementToBeRemoved(
           info.queryByText("We'll be right with you!")
         )
+      })
+
+      afterEach(() => {
+        console.error.restore()
       })
 
       it('should inform the user that an error has occured', () => {

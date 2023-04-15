@@ -13,7 +13,9 @@
       },
 
       rootClasses: function rootClasses () {
-        return `Flag currency-flag currency-flag-lg currency-flag-${this.code.toLowerCase()}`
+        return this.code == null
+          ? null
+          : `Flag currency-flag currency-flag-lg currency-flag-${this.code.toLowerCase()}`
       }
     }
   }

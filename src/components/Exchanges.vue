@@ -43,8 +43,8 @@
     data: () => {
       return {
         data: [],
-        loading: false,
-        range: '1W'
+        range: '1W',
+        loading: true
       }
     },
 
@@ -124,17 +124,29 @@
         return this.data[0]?.data
       },
 
-      difference: function difference () {
-        const startingPrice = this.startingPrice
-        const lastEntry = this.data[this.data.length - 1]?.data
+      currentPrice: function currentPrice () {
+        return this.data[this.data.length - 1]?.data
+      },
 
-        return startingPrice == null || lastEntry == null
+      difference: function difference () {
+        return this.startingPrice == null || this.currentPrice == null
           ? 0
-          : startingPrice - lastEntry
+          : this.currentPrice - this.startingPrice
+      },
+
+      currentPriceLabel: function differenceLabel () {
+        return this.codeTo == null ? null : new Intl.NumberFormat(
+          'en-IN',
+          {
+            style: 'currency',
+            currency: this.codeTo,
+            maximumSignificantDigits: 6
+          }
+        ).format(this.currentPrice)
       },
 
       differenceLabel: function differenceLabel () {
-        return new Intl.NumberFormat(
+        return this.codeTo == null ? null : new Intl.NumberFormat(
           'en-IN',
           {
             style: 'currency',
@@ -145,8 +157,8 @@
       },
 
       differencePercentage: function differencePercentage () {
-        const percentage = this.difference == 0 ? 0 : (
-          this.startingPrice/this.difference * 100
+        const percentage = (
+          (this.currentPrice - this.startingPrice) / this.startingPrice* 100
         ).toFixed(6)
 
         return `${percentage}%`
@@ -331,7 +343,10 @@
             : Promise.resolve()
         ).catch(err => {
           console.error(err)
-          this.$toast.error('An error occured while retrieving list of currencies.')
+
+          this.$toast.error(
+            'An error occured while retrieving the exchange rates.'
+          )
         }).then(() => this.loading = false)
       },
 
@@ -353,17 +368,21 @@
         <div class="ExchangesHeaderSymbols">
           <Flag :code="codeFrom"/>
           <Flag :code="codeTo"/>
-          <span class="ExchangesHeaderSymbolsExchangeName">Forex.com</span>
+          <span class="ExchangesHeaderSymbolsExchangeName" aria-label="Exchange">Forex.com</span>
         </div>
 
         <div class="ExchangesHeaderSummary">
-          <h3 class="ExchangesHeaderSummaryCurrencies">
-            EUR/USD
-          </h3>
+          <h3
+            aria-label="Currency Pair"
+            class="ExchangesHeaderSummaryCurrencies">EUR/USD</h3>
 
           <div class="ExchangesHeaderSummaryOverview">
-            <span class="ExchangesHeaderSummaryDifference">{{differenceLabel}}</span>
-            <span class="ExchangesHeaderSummaryPercentage">{{startingPrice}} ({{ differencePercentage }})</span>
+            <span class="ExchangesHeaderSummaryDifference" aria-label="Current Price">{{currentPriceLabel}}</span>
+
+            <span class="ExchangesHeaderSummaryPercentage">
+              <span aria-label="Difference">{{differenceLabel}}</span>
+              <span aria-label="Percentage Difference">({{ differencePercentage }})</span>
+            </span>
           </div>
         </div>
       </header>
