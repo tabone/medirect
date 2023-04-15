@@ -1,6 +1,11 @@
 <script>
   export default {
     props: {
+      label: {
+        type: String,
+        required: true
+      },
+
       selected: {
         type: Boolean,
         default: false
@@ -11,14 +16,25 @@
       rootClasses: function rootClasses () {
         return ['Tab', { 'Tab--Selected': this.selected }]
       }
+    },
+
+    methods: {
+      onClick: function onClick () {
+        this.$emit('onClick')
+      }
     }
   }
 </script>
 
 <template>
-  <button :class="rootClasses">
-    <slot></slot>
-  </button>
+  <span
+    tabindex="0"
+    role="checkbox"
+    :class="rootClasses"
+    :aria-checked="selected"
+    @click="onClick">
+    {{label}}
+  </span>
 </template>
 
 <style scoped>
