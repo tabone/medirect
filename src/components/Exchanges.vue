@@ -376,14 +376,12 @@
       </div>
 
       <div class="ExchangesRanges">
-
         <Tab
           :key="label"
+          :label="label"
           v-for="label in ranges"
           :selected="range === label"
-          @click.native="onRangeChange(label)">
-          {{ label }}
-        </Tab>
+          @onClick="onRangeChange(label)" />
       </div>
     </template>
   </Card>
