@@ -1,9 +1,12 @@
 import Vue from 'vue'
-import App from './App.vue'
+import VueToast from 'vue-toast-notification'
 
+import App from './App.vue'
 import store from './store'
 
 import './assets/main.css'
+
+Vue.use(VueToast)
 
 new Vue({
   data: store,

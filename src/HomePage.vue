@@ -28,6 +28,7 @@
         )
       }).catch((err) => {
         console.error(err)
+        this.$toast.error('An error occured while retrieving list of currencies.')
       }).then(() => {
         this.loading = false
       })

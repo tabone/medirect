@@ -44,7 +44,7 @@
       return {
         data: [],
         loading: false,
-        range: '1H'
+        range: '1W'
       }
     },
 
@@ -185,6 +185,7 @@
           )
         })
       },
+
       get1WData() {
         const toDate = new window.Date()
 
@@ -330,6 +331,7 @@
             : Promise.resolve()
         ).catch(err => {
           console.error(err)
+          this.$toast.error('An error occured while retrieving list of currencies.')
         }).then(() => this.loading = false)
       },
 
