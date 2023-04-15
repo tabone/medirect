@@ -20,6 +20,14 @@
       }
     },
 
+    components: {
+      Tab,
+      Flag,
+      Card,
+      Loader,
+      LineChart
+    },
+
     data: () => {
       return {
         data: [],
@@ -30,14 +38,6 @@
 
     mounted: function mounted () {
       this.refreshData()
-    },
-
-    components: {
-      Tab,
-      Flag,
-      Card,
-      Loader,
-      LineChart
     },
 
     watch: {

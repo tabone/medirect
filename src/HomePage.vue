@@ -5,18 +5,18 @@
   import Exchanges from "./components/Exchanges.vue"
 
   export default {
+    components: {
+      Page,
+      Select,
+      Exchanges
+    },
+
     data: () => {
       return {
         codeTo: null,
         codeFrom: null,
         loading: false
       }
-    },
-
-    components: {
-      Page,
-      Select,
-      Exchanges
     },
 
     mounted: function mounted () {
