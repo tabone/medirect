@@ -95,7 +95,7 @@ describe('<Tab />', () => {
         })
       })
 
-      describe('When clicking on the <Tab />', () => {
+      describe('when clicking on the <Tab />', () => {
         beforeEach(async () => {
           await userEvent.click(
             screen.getByRole('checkbox', {
@@ -104,7 +104,7 @@ describe('<Tab />', () => {
           )
         })
 
-        it('should', () => {
+        it('should trigger the onClick listener', () => {
           expect(info.emitted().onClick.length).toBe(1)
         })
       })
