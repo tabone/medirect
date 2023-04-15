@@ -1,10 +1,9 @@
 <script>
-  import 'chart.js/auto'
-  import { Line as LineChart } from "vue-chartjs";
-
   import Tab from "./Tab.vue"
   import Flag from "./Flag.vue"
+  import Card from "./Card.vue"
   import Loader from "./Loader.vue"
+  import LineChart from "./LineChart.vue"
 
   import axios from "../axios"
 
@@ -36,6 +35,7 @@
     components: {
       Tab,
       Flag,
+      Card,
       Loader,
       LineChart
     },
@@ -259,7 +259,7 @@
 </script>
 
 <template>
-  <div class="Exchanges">
+  <Card class="Exchanges">
     <div v-if="loading" class="ExchangesLoading">
       <Loader message="Retrieving data" />
     </div>
@@ -299,7 +299,7 @@
         </Tab>
       </div>
     </template>
-  </div>
+  </Card>
 </template>
 
 <style scoped>
@@ -311,7 +311,6 @@
     border-radius: 6px;
     padding: 20px 16px;
     min-height: 516px;
-    box-shadow: 0px 5px 15px -6px rgba(0,0,0,.5);
   }
 
   .ExchangesLoading {

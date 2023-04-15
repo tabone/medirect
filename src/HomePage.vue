@@ -62,9 +62,12 @@
         </Select>
       </div>
 
-      <div v-if="isChartVisible" class="HomePageChart">
-        <Exchanges :codeFrom="codeFrom" :codeTo="codeTo" />
-      </div>
+      <Exchanges
+        v-if="isChartVisible"
+        :codeTo="codeTo"
+        :codeFrom="codeFrom"
+        class="HomePageChart"
+      />
     </div>
   </Page>
 </template>
