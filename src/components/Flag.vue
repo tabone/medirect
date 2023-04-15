@@ -8,6 +8,10 @@
     },
 
     computed: {
+      description: function description () {
+        return `Flag of ${this.code}`
+      },
+
       rootClasses: function rootClasses () {
         return `Flag currency-flag currency-flag-lg currency-flag-${this.code.toLowerCase()}`
       }
@@ -16,7 +20,7 @@
 </script>
 
 <template>
-  <span :class="rootClasses"></span>
+  <span :class="rootClasses" :aria-label="description"></span>
 </template>
 
 <style scoped>
