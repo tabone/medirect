@@ -369,7 +369,10 @@
       </header>
 
       <div class="ExchangesChart">
-        <LineChart :data="chartData" :options="chartOptions" />
+        <LineChart
+          :data="chartData"
+          :name="currencyPair"
+          :options="chartOptions" />
       </div>
 
       <div class="ExchangesRanges">
