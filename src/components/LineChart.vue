@@ -64,6 +64,7 @@
           </th>
         </tr>
       </thead>
+
       <tbody>
         <tr v-for="record in records">
           <td>{{record.label}}</td>
