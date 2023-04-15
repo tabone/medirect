@@ -4,10 +4,12 @@ const client = axios.create({
   baseURL: 'https://marketdata.tradermade.com/api/v1/'
 })
 
+export const apiKey = 'p2738l3rgbrne-lIBMWY'
+
 client.interceptors.request.use((config) => {
   const newConfig = { ...config }
 
-  newConfig.params = { ...newConfig.params, api_key: 'p2738l3rgbrne-lIBMWY' }
+  newConfig.params = { ...newConfig.params, api_key: apiKey }
 
   return newConfig
 })
