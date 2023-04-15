@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 
 import PageLoader from '../PageLoader.vue'
 
-describe('<PageLoader />', () => {
+describe('<PageLoader /> Unit Tests', () => {
   let info = null
 
   afterEach(() => {

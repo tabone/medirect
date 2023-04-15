@@ -14,8 +14,9 @@
     data: () => {
       return {
         codeTo: null,
+        loading: true,
         codeFrom: null,
-        loading: false
+        currencies: []
       }
     },
 
@@ -23,9 +24,7 @@
       this.loading = true
 
       axios.get('/live_currencies_list').then((resp) => {
-        this.$root.onCurrenciesChange(
-          Object.keys(resp.data.available_currencies)
-        )
+        this.currencies = Object.keys(resp.data.available_currencies)
       }).catch((err) => {
         console.error(err)
         this.$toast.error('An error occured while retrieving list of currencies.')
@@ -50,15 +49,16 @@
     <div class="HomePage">
       <div class="HomePageConfiguration">
         <Select fullWidth v-model="codeFrom" aria-label="Currency From">
-          <option :key="currency" v-for="currency in $root.currencies" :value="currency">
-            {{ currency }}
-          </option>
+          <option
+            :key="currency"
+            v-for="currency in currencies"
+          >{{ currency }}</option>
         </Select>
 
         <Select fullWidth v-model="codeTo" aria-label="Currency To">
           <option
-            v-for="currency in $root.currencies"
             :key="currency"
+            v-for="currency in currencies"
           >{{ currency }}</option>
         </Select>
       </div>

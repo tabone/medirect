@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 
 import Card from '../Card.vue'
 
-describe('<Card />', () => {
+describe('<Card /> Unit Tests', () => {
   let info = null
 
   afterEach(() => {

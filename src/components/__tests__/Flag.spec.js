@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 
 import Flag from '../Flag.vue'
 
-describe('<Flag />', () => {
+describe('<Flag /> Unit Tests', () => {
   let info = null
 
   afterEach(() => {

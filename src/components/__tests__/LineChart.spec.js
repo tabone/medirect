@@ -9,7 +9,7 @@ vi.mock('chart.js/auto', () => {
   }
 })
 
-describe('<LineChart />', () => {
+describe('<LineChart /> Unit Tests', () => {
   let info = null
 
   afterEach(() => {

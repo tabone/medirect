@@ -4,7 +4,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
 import Tab from '../Tab.vue'
 
-describe('<Tab />', () => {
+describe('<Tab /> Unit Tests', () => {
   let info = null
 
   afterEach(() => {

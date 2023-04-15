@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 
 import Page from '../Page.vue'
 
-describe('<Page />', () => {
+describe('<Page /> Unit Tests', () => {
   let info = null
 
   afterEach(() => {

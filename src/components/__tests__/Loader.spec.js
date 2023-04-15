@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 
 import Loader from '../Loader.vue'
 
-describe('<Loader />', () => {
+describe('<Loader /> Unit Tests', () => {
   let info = null
 
   afterEach(() => {
