@@ -10,18 +10,16 @@
 </script>
 
 <template>
-  <div v-if="true" class="PageLoader">
+  <div class="Loader">
     <img
       alt="Loading Spinner"
-      aria-label="Loading..."
       src="@/assets/loading.gif" />
-
     {{message}}
   </div>
 </template>
 
 <style scoped>
-  .PageLoader {
+  .Loader {
     gap: 16px;
     display: flex;
     align-items: center;
