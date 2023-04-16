@@ -1,11 +1,11 @@
 <script>
+  import axios from "../axios"
+
   import Tab from "./Tab.vue"
   import Flag from "./Flag.vue"
   import Card from "./Card.vue"
   import Loader from "./Loader.vue"
   import LineChart from "./LineChart.vue"
-
-  import axios from "../axios"
 
   function formatDate (date) {
     return [
@@ -17,7 +17,7 @@
         String(date.getUTCMinutes()).padStart(2, '0')
       ].join(':')
     ].join('-')
-}
+  }
 
   export default {
     props: {
@@ -121,11 +121,13 @@
       },
 
       startingPrice: function startingPrice () {
-        return this.data[0]?.data
+        const startingPrice = this.data[0]?.data
+        return startingPrice == null ? 0 : startingPrice
       },
 
       currentPrice: function currentPrice () {
-        return this.data[this.data.length - 1]?.data
+        const currentPrice = this.data[this.data.length - 1]?.data
+        return currentPrice == null ? 0 : currentPrice
       },
 
       difference: function difference () {
@@ -157,11 +159,11 @@
       },
 
       differencePercentage: function differencePercentage () {
-        const percentage = (
-          (this.currentPrice - this.startingPrice) / this.startingPrice* 100
+        const percentage = this.startingPrice == 0 ? null : (
+          (this.currentPrice - this.startingPrice) / this.startingPrice * 100
         ).toFixed(6)
 
-        return `${percentage}%`
+        return percentage == null ? 'N/A' : `${percentage}%`
       }
     },
 
@@ -183,19 +185,7 @@
           start_date: formatDate(fromDate)
         }
 
-        return axios.get('/timeseries', { params }).then((resp) => {
-          this.data = resp.data.quotes.reduce(
-            (data, quote) => {
-              data.push(
-                {
-                  label: quote.date,
-                  data: quote.close
-                }
-              )
-              return data
-            }, []
-          )
-        })
+        return axios.get('/timeseries', { params })
       },
 
       get1WData() {
@@ -215,19 +205,7 @@
           start_date: formatDate(fromDate)
         }
 
-        return axios.get('/timeseries', { params }).then((resp) => {
-          this.data = resp.data.quotes.reduce(
-            (data, quote) => {
-              data.push(
-                {
-                  label: quote.date,
-                  data: quote.close
-                }
-              )
-              return data
-            }, []
-          )
-        })
+        return axios.get('/timeseries', { params })
       },
 
       get1DData() {
@@ -247,19 +225,7 @@
           start_date: formatDate(fromDate)
         }
 
-        return axios.get('/timeseries', { params }).then((resp) => {
-          this.data = resp.data.quotes.reduce(
-            (data, quote) => {
-              data.push(
-                {
-                  label: quote.date,
-                  data: quote.close
-                }
-              )
-              return data
-            }, []
-          )
-        })
+        return axios.get('/timeseries', { params })
       },
 
       get1HData() {
@@ -279,19 +245,7 @@
           start_date: formatDate(fromDate)
         }
 
-        return axios.get('/timeseries', { params }).then((resp) => {
-          this.data = resp.data.quotes.reduce(
-            (data, quote) => {
-              data.push(
-                {
-                  label: quote.date,
-                  data: quote.close
-                }
-              )
-              return data
-            }, []
-          )
-        })
+        return axios.get('/timeseries', { params })
       },
 
       get15MData () {
@@ -311,19 +265,7 @@
           start_date: formatDate(fromDate)
         }
 
-        return axios.get('/timeseries', { params }).then((resp) => {
-          this.data = resp.data.quotes.reduce(
-            (data, quote) => {
-              data.push(
-                {
-                  label: quote.date,
-                  data: quote.close
-                }
-              )
-              return data
-            }, []
-          )
-        })
+        return axios.get('/timeseries', { params })
       },
 
       refreshData() {
@@ -341,7 +283,19 @@
             : this.range === '1M'
             ? this.get1MData()
             : Promise.resolve()
-        ).catch(err => {
+        ).then((resp) => {
+          this.data = resp.data.quotes.reduce(
+            (data, quote) => {
+              data.push(
+                {
+                  label: quote.date,
+                  data: quote.close
+                }
+              )
+              return data
+            }, []
+          )
+        }).catch(err => {
           console.error(err)
 
           this.$toast.error(

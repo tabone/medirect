@@ -31,7 +31,7 @@ describe('<Page /> Unit Tests', () => {
       ).not.toBeNull()
     })
 
-    it('should display the sub title', () => {
+    it('should display the subtitle', () => {
       expect(
         screen.getByRole('heading', {
           name: 'test-subtitle'
@@ -89,7 +89,7 @@ describe('<Page /> Unit Tests', () => {
       ).toBeNull()
     })
 
-    it('should not display the sub title', () => {
+    it('should not display the subtitle', () => {
       expect(
         screen.queryByRole('heading', {
           name: 'test-subtitle'

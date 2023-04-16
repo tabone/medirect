@@ -153,6 +153,91 @@ describe('<Exchanges /> Unit Tests', () => {
     })
   })
 
+  describe('Rendering the <Exchanges /> component when there is no historical data', () => {
+    describe('When rendering the <Exchanges /> component when there is no historical data', () => {
+      beforeEach(async () => {
+        mockedClients.axiosMock.onGet('/timeseries').reply(200, {
+          quotes: []
+        })
+
+        info = render(Exchanges, {
+          props: {
+            codeFrom: 'EUR',
+            codeTo: 'USD'
+          }
+        })
+
+        await waitForElementToBeRemoved(info.queryByText('Retrieving data'))
+      })
+
+      it('should make an HTTP Request to retrieve the historical exchange rates', () => {
+        const getCalls = mockedClients.axiosMock.history.get
+
+        expect(getCalls.length).toBe(1)
+        expect(getCalls[0].url).toBe('/timeseries')
+
+        const toDate = new window.Date()
+        const fromDate = new window.Date()
+        fromDate.setDate(fromDate.getDate() - 7)
+
+        const {
+          period,
+          format,
+          api_key,
+          currency,
+          interval,
+          end_date,
+          start_date
+        } = getCalls[0].params
+
+        expect({
+          period,
+          format,
+          api_key,
+          currency,
+          interval
+        }).toEqual({
+          period: 1,
+          api_key: apiKey,
+          format: 'records',
+          interval: 'hourly',
+          currency: 'EURUSD'
+        })
+
+        // 5 minutes threshold
+        expect(Math.abs(parseDate(end_date) - toDate) < 300000).toBeTruthy()
+        expect(Math.abs(parseDate(start_date) - fromDate) < 300000).toBeTruthy()
+      })
+
+      it('should display the flags of the currency pair', () => {
+        expect(screen.getByLabelText('Flag of EUR')).not.toBeNull()
+        expect(screen.getByLabelText('Flag of USD')).not.toBeNull()
+      })
+
+      it('should display the names of the currency pair', () => {
+        expect(screen.getByLabelText('Currency Pair').innerHTML).toBe('EUR/USD')
+      })
+
+      it('should display the name of the exchange', () => {
+        expect(screen.getByLabelText('Exchange').innerHTML).toBe('Forex.com')
+      })
+
+      it('should display the current price', () => {
+        expect(screen.getByLabelText('Current Price').innerHTML).toBe('$0')
+      })
+
+      it('should display the difference between the starting and ending price', () => {
+        expect(screen.getByLabelText('Difference').innerHTML).toBe('$0')
+      })
+
+      it('should display the percentage difference between the starting and ending price', () => {
+        expect(screen.getByLabelText('Percentage Difference').innerHTML).toBe(
+          '(N/A)'
+        )
+      })
+    })
+  })
+
   describe('Failing to retrieve the exchange rates', () => {
     describe('When failing to retrieve the exchange rates', () => {
       beforeEach(async () => {

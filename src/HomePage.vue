@@ -45,7 +45,7 @@
   <Page
     :loading="loading"
     title="Forex Exchange"
-    subtitle="Checkout the current price for a currency pair" >
+    subtitle="Checkout the current price for a currency pair">
     <div class="HomePage">
       <div class="HomePageConfiguration">
         <Select fullWidth v-model="codeFrom" aria-label="Currency From">

@@ -22,7 +22,7 @@
 </script>
 
 <template>
-  <span :class="rootClasses" :aria-label="description"></span>
+  <span v-if="code" :class="rootClasses" :aria-label="description"></span>
 </template>
 
 <style scoped>

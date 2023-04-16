@@ -18,7 +18,7 @@
 
     computed: {
       rootClasses: function rootClasses () {
-        return ['Select', { 'Select--FullWidth': this.fullWidth}]
+        return ['Select', { 'Select--FullWidth': this.fullWidth }]
       }
     }
   }
