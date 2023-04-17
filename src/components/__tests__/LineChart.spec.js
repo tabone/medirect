@@ -30,7 +30,7 @@ describe('<LineChart /> Unit Tests', () => {
                   data: [0.034, 0.0341, 0.0336, 0.0336],
                   fill: 'origin',
                   pointRadius: 0,
-                  label: 'Data One',
+                  label: 'test-name',
                   borderColor: '#7bc414',
                   backgroundColor: '#f2f9ea'
                 }

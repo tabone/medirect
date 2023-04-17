@@ -94,8 +94,8 @@
               data,
               fill: 'origin',
               pointRadius: 0,
-              label: 'Data One',
               borderColor: '#7bc414',
+              label: this.currencyPair,
               backgroundColor: '#f2f9ea'
             }
           ]
